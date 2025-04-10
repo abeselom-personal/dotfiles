@@ -3,6 +3,11 @@ require("nvchad.mappings")
 
 local map = vim.keymap.set
 
+map("n", "<leader>cls", function()
+  vim.cmd("wa")
+  vim.cmd("%bd")
+  vim.cmd("e#")
+end, { desc = "Close all buffers except current and save" })
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 
