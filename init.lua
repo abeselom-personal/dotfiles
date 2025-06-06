@@ -1,11 +1,18 @@
 vim.g.base46_cache = vim.fn.stdpath("data") .. "/nvchad/base46/"
 vim.g.mapleader = " "
+vim.keymap.set("x", "<", "<gv")
+vim.keymap.set("x", ">", ">gv")
+vim.opt.clipboard = "unnamedplus"
 vim.wo.relativenumber = true
 vim.wo.number = true
 vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.writebackup = false
 vim.g.codeium_disable_bindings = 1
+vim.api.nvim_set_keymap("n", "d", '"_d', { noremap = true })
+vim.api.nvim_set_keymap("v", "d", '"_d', { noremap = true })
+vim.api.nvim_set_keymap("n", "c", '"_c', { noremap = true })
+vim.api.nvim_set_keymap("v", "c", '"_c', { noremap = true })
 -- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -30,16 +37,103 @@ require("lazy").setup({
   },
 
   {
-    "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    opts = {
+      menu = {
+        width = vim.api.nvim_win_get_width(0) - 4,
+      },
+      settings = {
+        save_on_toggle = true,
+      },
+    },
+    keys = function()
+      local keys = {
+        {
+          "<leader>H",
+          function()
+            require("harpoon"):list():add()
+          end,
+          desc = "Harpoon File",
+        },
+        {
+          "<leader>h",
+          function()
+            local harpoon = require("harpoon")
+            harpoon.ui:toggle_quick_menu(harpoon:list())
+          end,
+          desc = "Harpoon Quick Menu",
+        },
+      }
+      for i = 1, 5 do
+        table.insert(keys, {
+          "<leader>" .. i,
+          function()
+            require("harpoon"):list():select(i)
+          end,
+          desc = "Harpoon to File " .. i,
+        })
+      end
+      return keys
+    end,
+  },
+  {
+    "adalessa/laravel.nvim",
+    dependencies = {
+      "tpope/vim-dotenv",
+      "nvim-telescope/telescope.nvim",
+      "MunifTanjim/nui.nvim",
+      "kevinhwang91/promise-async",
+    },
+    cmd = { "Laravel" },
+    keys = {
+      { "<leader>la", ":Laravel artisan<cr>" },
+      { "<leader>lr", ":Laravel routes<cr>" },
+      { "<leader>lm", ":Laravel related<cr>" },
+    },
+    event = { "VeryLazy" },
+    opts = {},
+    config = true,
+  },
+  {
+    "nvim-tree/nvim-tree.lua",
     config = function()
-      require("nvim-treesitter.configs").setup({
-        ensure_installed = { "lua", "go", "python", "javascript", "typescript", "rust" }, -- Add languages
-        highlight = { enable = true },
-        incremental_selection = { enable = true },
+      require("nvim-tree").setup({
+        filters = { dotfiles = false },
+        update_focused_file = {
+          enable = true,
+          update_cwd = true,
+          ignore_list = {},
+        },
       })
     end,
   },
+  -- {
+  --   "supermaven-inc/supermaven-nvim",
+  --   event = "InsertEnter",
+  --   config = function()
+  --     require("supermaven-nvim").setup({
+  --       keymaps = {
+  --         accept_suggestion = "<C-x>",
+  --         clear_suggestion = "<C-c>",
+  --       },
+  --       enable_tab_completion = false, -- Disable Tab, use only C-Space
+  --       -- disable_keymaps = true, -- full manual control
+  --       prediction_strength_display = true, -- show ghost text faintly
+  --       disable_auto_install = false,
+  --     })
+  --   end,
+  -- },
+  -- {
+  --    "rest-nvim/rest.nvim",
+  --   dependencies = {
+  --     "nvim-treesitter/nvim-treesitter",
+  --     opts = function(_, opts)
+  --       opts.ensure_installed = opts.ensure_installed or {}
+  --       table.insert(opts.ensure_installed, "http")
+  --     end,
+  --   },
+  -- },
   {
     "folke/flash.nvim",
     event = "VeryLazy",
@@ -47,9 +141,9 @@ require("lazy").setup({
       modes = {
         char = {
           enabled = true,
-          jump_labels = true,
-          keys = { "f", "F", "t", "T" }, -- Enables Flash for f/F/t/T
-          search = { mode = "search" }, -- Multi-character search mode
+          -- jump_labels = true,
+          keys = { "t", "T" }, -- removed f/F
+          search = { mode = "search" },
           center = true,
         },
       },

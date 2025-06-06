@@ -1,14 +1,19 @@
 require("nvchad.mappings")
--- add yours here
 
 local map = vim.keymap.set
 
+vim.api.nvim_set_keymap(
+  "i",
+  "<Tab>",
+  "<Cmd>lua require('luasnip').expand_or_jump()<CR>",
+  { noremap = true, silent = true }
+)
 map("n", "<leader>cls", function()
   vim.cmd("wa")
   vim.cmd("%bd")
   vim.cmd("e#")
 end, { desc = "Close all buffers except current and save" })
-map("n", ";", ":", { desc = "CMD enter command mode" })
+map("n", "[", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 
 -- map("i", "<C-s>", "<Esc>:w<CR>a", { noremap = true, silent = true })

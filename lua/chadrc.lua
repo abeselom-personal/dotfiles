@@ -1,16 +1,8 @@
--- This file needs to have same structure as nvconfig.lua
--- https://github.com/NvChad/ui/blob/v2.5/lua/nvconfig.lua
-
 ---@type ChadrcConfig
 local M = {}
 
 M.base46 = {
-  theme = "ashes",
-
-  -- hl_override = {
-  -- 	Comment = { italic = true },
-  -- 	["@comment"] = { italic = true },
-  -- },
+  theme = "aylin",
 }
 
 M.nvdash = {
@@ -20,7 +12,7 @@ M.nvdash = {
     "     ▄▄         ▄ ▄▄▄▄▄▄▄   ",
     "   ▄▀███▄     ▄██ █████▀    ",
     "   ██▄▀███▄   ███           ",
-    "   ███  ▀███▄ ███           ",
+    string.format("   ███  ▀███▄ ███  %s      ", os.date("%a")), -- Embedded day
     "   ███    ▀██ ███           ",
     "   ███      ▀ ███           ",
     "   ▀██ █████▄▀█▀▄██████▄    ",
@@ -29,16 +21,13 @@ M.nvdash = {
     "     Powered By  eovim    ",
     "                            ",
   },
-
   buttons = {
     { txt = "  Find File", keys = "ff", cmd = "Telescope find_files" },
     { txt = "  Recent Files", keys = "fo", cmd = "Telescope oldfiles" },
     { txt = "󰈭  Find Word", keys = "fw", cmd = "Telescope live_grep" },
     { txt = "󱥚  Themes", keys = "th", cmd = ":lua require('nvchad.themes').open()" },
     { txt = "  Mappings", keys = "ch", cmd = "NvCheatsheet" },
-
     { txt = "─", hl = "NvDashLazy", no_gap = true, rep = true },
-
     {
       txt = function()
         local stats = require("lazy").stats()
@@ -48,7 +37,6 @@ M.nvdash = {
       hl = "NvDashLazy",
       no_gap = true,
     },
-
     { txt = "─", hl = "NvDashLazy", no_gap = true, rep = true },
   },
 }
